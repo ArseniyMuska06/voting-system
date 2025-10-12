@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Активні голосування</h1>
+
+{% if polls %}
+  <div class="cards">
+    {% for p in polls %}
+      <div class="card">
+        <h3><a href="{% url 'polls:detail' p.pk %}">{{ p.title }}</a></h3>
+        {% if p.short_description %}<p>{{ p.short_description }}</p>{% endif %}
+        <div><small>Статус: {{ p.get_status_display }}</small></div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>Немає активних голосувань.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Головна{% endblock %}
+{% block content %}
+  <!-- <h2>Ласкаво просимо</h2> -->
+  <button onclick="document.getElementById('login-modal').showModal()">Вхід</button>
+
+  <dialog id="login-modal">
+    <form method="dialog">
+      <h3>Увійти як</h3>
+      <p>
+        <a href="/accounts/login">Користувач</a>
+      </p>
+      <p>
+        <a href="/accounts/login-admin">Адмін</a>
+      </p>
+      <menu>
+        <button>Закрити</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <button onclick="document.getElementById('register-modal').showModal()">Реєстрація</button>
+
+  <dialog id="register-modal">
+    <form method="dialog">
+      <h3>Зареєструватися як</h3>
+      <p>
+        <a href="/accounts/register">Користувач</a>
+      </p>
+      <p>
+        <a href="/accounts/register-admin">Адмін</a>
+      </p>
+      <menu>
+        <button>Закрити</button>
+      </menu>
+    </form>
+  </dialog>
+{% endblock %}

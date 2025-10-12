@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{{ form.as_p }}
+{% block content %}
+<h2>Реєстрація адміністратора</h2>
+<form method="post">{% csrf_token %}
+  {{ uform.as_p }}
+  {{ pform.as_p }}
+  <button type="submit">Зареєструватися</button>
+</form>
+{% endblock %}

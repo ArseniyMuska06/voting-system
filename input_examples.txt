@@ -1,0 +1,23 @@
+Для користувача:
+Username: sofianovikova25
+Email: sofia.novikova25@ukr.net
+Password: Sunrise#2025
+Password confirmation: Sunrise#2025
+Surname (Прізвище): Новікова
+Name (Ім’я): Софія
+Patronymic (По батькові): Ігорівна
+Oblast (Область): Київська
+City (Місто): Біла Церква
+Address (Адреса): вул. Героїв Небесної Сотні, 14
+
+Для адміна:
+Username: maksymorlov88
+Email: maksym.orlov88@gmail.com
+Password: Forest!88
+Password confirmation: Forest88
+Surname (Прізвище): Орлов
+Name (Ім’я): Максим
+Patronymic (По батькові): Сергійович
+Oblast (Область): Одеська
+City (Місто): Чорноморськ
+Address (Адреса): вул. Центральна, 8

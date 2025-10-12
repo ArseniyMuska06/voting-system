@@ -1,0 +1,24 @@
+{% load static %}
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <title>{% block title %}Voting System{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+  <header>
+    <h1>Система голосування</h1>
+    <!-- <nav>
+      <a href="/accounts/">Вхід</a>
+    </nav>
+    <nav>
+      <a href="/accounts/">Реєстрація</a>
+    </nav> -->
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

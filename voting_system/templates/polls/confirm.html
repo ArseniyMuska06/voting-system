@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Підтвердження</h2>
+<p>Ваш голос зараховано. Дякуємо!</p>
+<p><a href="{% url 'polls:list' %}">Повернутися до списку</a></p>
+
+<script>
+  // авто-повернення через 2 секунди
+  setTimeout(function(){ window.location = "{% url 'polls:list' %}"; }, 2000);
+</script>
+{% endblock %}
