@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
+{% load polls_extras %}
+
 <h2>{{ poll.title }}</h2>
 {% if poll.short_description %}<p>{{ poll.short_description }}</p>{% endif %}
+
+{% has_voted poll as voted %}
+{% if voted %}
+  <div style="padding:10px; margin-bottom:15px; background:#fff3cd; border:1px solid #ffeeba; border-radius:5px; color:#856404;">
+    Ви вже голосували в цьому голосуванні.
+  </div>
+{% endif %}
 
 <form method="post">
   {% csrf_token %}
