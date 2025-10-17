@@ -5,18 +5,66 @@
 <h2>{{ poll.title }}</h2>
 {% if poll.short_description %}<p>{{ poll.short_description }}</p>{% endif %}
 
-{% has_voted poll as voted %}
-{% if voted %}
-  <div style="padding:10px; margin-bottom:15px; background:#fff3cd; border:1px solid #ffeeba; border-radius:5px; color:#856404;">
-    Ви вже голосували в цьому голосуванні.
+{% if is_finished %}
+  <div style="padding:10px; margin-bottom:12px; background:#f6f7f9; border:1px solid #e5e7eb; border-radius:8px;">
+    Голосування завершено. Результати нижче.
   </div>
+
+  {# Бейдж дійсності #}
+  <div style="margin:6px 0 14px;">
+    {% if is_valid %}
+      <span style="display:inline-block;padding:4px 10px;border-radius:999px;background:#e6ffed;color:#046c4e;font-weight:600;">
+        Дійсне
+      </span>
+    {% else %}
+      <span style="display:inline-block;padding:4px 10px;border-radius:999px;background:#ffeaea;color:#7a0010;font-weight:600;">
+        Недійсне
+      </span>
+    {% endif %}
+    {% if validity_note %}<small style="margin-left:8px;color:#666;">{{ validity_note }}</small>{% endif %}
+  </div>
+
+  {# Таблиця результатів #}
+  <table style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr>
+        <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">Варіант</th>
+        <th style="text-align:right; padding:8px; border-bottom:1px solid #ddd;">Кількість</th>
+        <th style="text-align:right; padding:8px; border-bottom:1px solid #ddd;">Відсоток</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in totals.by_option %}
+      <tr>
+        <td style="padding:8px; border-bottom:1px solid #f0f0f0;">{{ row.option.text }}</td>
+        <td style="padding:8px; border-bottom:1px solid #f0f0f0; text-align:right;">{{ row.count }}</td>
+        <td style="padding:8px; border-bottom:1px solid #f0f0f0; text-align:right;">{{ row.percent }}%</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td style="padding:8px; border-top:2px solid #ccc; font-weight:600;">Всього</td>
+        <td style="padding:8px; border-top:2px solid #ccc; text-align:right; font-weight:600;">{{ totals.total }}</td>
+        <td style="padding:8px; border-top:2px solid #ccc; text-align:right; font-weight:600;">
+          {% if totals.total %}100%{% else %}0%{% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+{% else %}
+  {# Активне — як у тебе було #}
+  {% has_voted poll as voted %}
+  {% if voted %}
+    <div style="padding:10px; margin-bottom:15px; background:#fff3cd; border:1px solid #ffeeba; border-radius:5px; color:#856404;">
+      Ви вже голосували в цьому голосуванні.
+    </div>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Проголосувати</button>
+  </form>
 {% endif %}
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Проголосувати</button>
-</form>
-
-<p><a href="{% url 'polls:list' %}">← До списку</a></p>
+<p style="margin-top:12px;"><a href="{% url 'polls:list' %}">← До списку</a></p>
 {% endblock %}

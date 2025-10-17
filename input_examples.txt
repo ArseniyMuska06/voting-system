@@ -1,4 +1,4 @@
-Єдиний що поки є у базі:
+Єдиний що поки є у базі (як користувач):
 Username: suoigga11
 Email: my.hometown11@ukr.net
 Password: Ohiostate

@@ -16,6 +16,7 @@ class Poll(models.Model):
     quorum = models.PositiveSmallIntegerField(                  # кворум у %, 0–100
         help_text="Кворум у відсотках (0–100).",
     )
+    expected_turnout = models.PositiveIntegerField(null=True, blank=True, help_text="Очікуваний корпус виборців (шт.).")
     status = models.CharField(
         max_length=10,
         choices=Status.choices,

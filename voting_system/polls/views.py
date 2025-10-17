@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from .mongo import get_votes_collection, get_user_id_for_request
+from .services import tally_poll, check_validity  # NEW
 
 def home(request):
     return render(request, "home.html")
 
 # polls/views.py
+from django.db import models
 from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404, redirect, render
@@ -48,8 +50,17 @@ class PollDetailView(DetailView):
     context_object_name = "poll"
 
     def get_queryset(self):
-        # дозволяємо відкривати деталь лише для активних
-        return _active_filter_qs()
+        # РАНІШЕ: return _active_filter_qs()   # -> лише активні (і ти ловиш 404) :contentReference[oaicite:2]{index=2}
+        # ТЕПЕР: пускаємо активні АБО завершені АБО ті, в яких end_at уже минув
+        now = timezone.now()
+        return (Poll.objects
+                .filter(
+                    models.Q(status=Poll.Status.ACTIVE) |
+                    models.Q(status=Poll.Status.COMPLETED) |
+                    models.Q(end_at__isnull=False, end_at__lt=now)
+                )
+                .select_related("admin")
+                .prefetch_related("options"))
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -66,7 +77,27 @@ class PollDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx["form"] = VoteForm(poll=self.object)
+        poll = self.object
+
+        # прапорець «завершене»
+        now = timezone.now()
+        is_finished = (
+            poll.status == Poll.Status.COMPLETED or
+            (poll.end_at is not None and poll.end_at <= now)
+        )
+        ctx["is_finished"] = is_finished
+
+        # якщо завершене — рахуємо підсумки і (за наявності) кворум
+        if is_finished:
+            totals = tally_poll(poll)
+            is_valid, validity_note = check_validity(poll, totals["total"])
+            ctx["totals"] = totals
+            ctx["is_valid"] = is_valid
+            ctx["validity_note"] = validity_note
+        else:
+            # активне — показуємо форму, як і було
+            ctx["form"] = VoteForm(poll=poll)
+
         return ctx
     
     def post(self, request, *args, **kwargs):
