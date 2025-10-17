@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load polls_extras %}
+{% block content %}
+<h1>{{ poll.title }}</h1>
+{% if poll.short_description %}<p>{{ poll.short_description }}</p>{% endif %}
+
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:16px;">
+  <div style="border:1px solid #ddd; border-radius:8px; padding:12px;">
+    <h3>Інформація</h3>
+    <p><strong>Статус:</strong> {{ poll.get_status_display }}</p>
+    <p><strong>Початок:</strong> {{ poll.start_at|default:"—" }}</p>
+    <p><strong>Кінець:</strong> {{ poll.end_at|default:"—" }}</p>
+    <p><strong>Дозволена зміна голосу:</strong> {{ poll.can_change_vote|yesno:"Так,Ні" }}</p>
+    <p><strong>Кворум:</strong> {{ poll.quorum }}%</p>
+    <p><strong>Очікуваний корпус:</strong> {{ poll.expected_turnout|default:"—" }}</p>
+  </div>
+
+  <div style="border:1px solid #ddd; border-radius:8px; padding:12px;">
+    <h3>Статистика (Mongo)</h3>
+    <p><strong>Загалом голосів:</strong> {{ total_votes }}</p>
+    <p>
+      <strong>Кворум потрібен:</strong>
+      {% if need_votes %} {{ need_votes }} {% else %} — {% endif %}
+    </p>
+    <p>
+      <strong>Дійсність за кворумом:</strong>
+      {% if valid is None %} Н/Д (немає expected_turnout)
+      {% elif valid %} Так
+      {% else %} Ні
+      {% endif %}
+    </p>
+  </div>
+</div>
+
+<div style="border:1px solid #ddd; border-radius:8px; padding:12px; margin-bottom:16px;">
+  <h3>Варіанти</h3>
+  <table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Текст</th>
+        <th>Голосів</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for opt in poll.options.all %}
+        <tr>
+          <td>{{ opt.order }}</td>
+          <td>{{ opt.text }}</td>
+          <td>{{ option_votes|get_item:opt.pk|default:0 }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if poll.status != "completed" %}
+  <form method="post" action="{% url 'adminpanel:finish_now' poll.pk %}" onsubmit="return confirm('Завершити зараз?');">
+    {% csrf_token %}
+    <button type="submit">Завершити зараз</button>
+  </form>
+{% else %}
+  <p><em>Опитування вже завершене.</em></p>
+{% endif %}
+
+<p style="margin-top:12px;"><a href="{% url 'adminpanel:list' %}">← До списку</a></p>
+{% endblock %}

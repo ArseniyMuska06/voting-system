@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Створення голосування</h1>
+
+<form method="post">
+  {% csrf_token %}
+
+  <fieldset style="border:1px solid #ddd; padding:12px; border-radius:8px; margin-bottom:14px;">
+    <legend>Параметри опитування</legend>
+    {{ poll_form.as_p }}
+  </fieldset>
+
+  <fieldset style="border:1px solid #ddd; padding:12px; border-radius:8px;">
+    <legend>Варіанти (мінімум 2)</legend>
+    {{ formset.management_form }}
+    {% for form in formset %}
+      <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+        {{ form.text.label_tag }} {{ form.text }}
+        {{ form.order.label_tag }} {{ form.order }}
+        {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+        {% if form.errors %}<div style="color:crimson;">{{ form.errors }}</div>{% endif %}
+      </div>
+    {% endfor %}
+  </fieldset>
+
+  <div style="margin-top:12px;">
+    <button type="submit">Створити</button>
+    <a href="{% url 'adminpanel:list' %}">Скасувати</a>
+  </div>
+</form>
+{% endblock %}

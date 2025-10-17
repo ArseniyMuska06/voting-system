@@ -19,3 +19,13 @@ def has_voted(context, poll):
         return col.find_one(doc_filter) is not None
     except Exception:
         return False
+
+@register.filter
+def get_item(d, key):
+    try:
+        if d is None:
+            return None
+        # пробуємо int-ключ і str-ключ
+        return d.get(int(key), d.get(str(key)))
+    except Exception:
+        return None

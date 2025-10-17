@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Мої голосування</h1>
+
+<p><a href="{% url 'adminpanel:create' %}">+ Створити нове</a></p>
+
+{% if polls %}
+  <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:14px;">
+    {% for p in polls %}
+      <div style="border:1px solid #ddd; border-radius:8px; padding:12px;">
+        <h3 style="margin:0 0 8px;"><a href="{% url 'adminpanel:detail' p.pk %}">{{ p.title }}</a></h3>
+        {% if p.short_description %}<p style="margin:0 0 6px; color:#666;">{{ p.short_description }}</p>{% endif %}
+        <div style="font-size:90%; color:#555;">
+          <div><strong>Статус:</strong> {{ p.get_status_display }}</div>
+          <div><strong>Початок:</strong> {{ p.start_at|default:"—" }}</div>
+          <div><strong>Кінець:</strong> {{ p.end_at|default:"—" }}</div>
+          <div><strong>Варіантів:</strong> {{ p.options.count }}</div>
+        </div>
+        <div style="margin-top:10px;">
+          <a href="{% url 'adminpanel:detail' p.pk %}">Відкрити</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>Поки що немає опитувань.</p>
+{% endif %}
+
+{% endblock %}

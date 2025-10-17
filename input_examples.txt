@@ -9,3 +9,15 @@ Patronymic (По батькові): Іванович
 Oblast (Область): Київська
 City (Місто): Біла Церква
 Address (Адреса): вул. Героїв Небесної Сотні, 14
+
+Адмін:
+Username: maksymorlov
+Email: maksym.orlov88@gmail.com
+Password: fooreest
+Password confirmation: fooreest
+Surname (Прізвище): Орлов
+Name (Ім’я): Максим
+Patronymic (По батькові): Сергійович
+Oblast (Область): Одеська
+City (Місто): Чорноморськ
+Address (Адреса): вул. Центральна, 8

@@ -7,4 +7,5 @@ urlpatterns = [
     path("", home, name="home"),
     path("accounts/", include("accounts.urls")),
     path("polls/", include("polls.urls")),
+    path("adminpanel/", include("adminpanel.urls")),
 ]
