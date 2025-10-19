@@ -13,6 +13,8 @@ from polls.models import Poll, PollOption
 from polls.mongo import get_votes_collection
 from .forms import AdminPollForm, OptionFormSet
 
+from .mixins import AdminGroupRequiredMixin
+
 
 def _quorum_required(poll: Poll) -> int | None:
     """
@@ -39,7 +41,7 @@ def _option_counts(poll: Poll) -> dict[int, int]:
     return result
 
 
-class MyPollListView(LoginRequiredMixin, ListView):
+class MyPollListView(AdminGroupRequiredMixin, ListView):
     """
     /adminpanel/ — список моїх голосувань (admin = поточний юзер).
     Картки з назвою/датами/статусом.
@@ -58,7 +60,7 @@ class MyPollListView(LoginRequiredMixin, ListView):
         )
 
 
-class PollCreateView(LoginRequiredMixin, View):
+class PollCreateView(AdminGroupRequiredMixin, View):
     """
     /adminpanel/create/ — створення Poll + PollOption (мін. 2).
     """
@@ -97,7 +99,7 @@ class PollCreateView(LoginRequiredMixin, View):
         return redirect(self.success_url)
 
 
-class PollAdminDetailView(LoginRequiredMixin, DetailView):
+class PollAdminDetailView(AdminGroupRequiredMixin, DetailView):
     """
     /adminpanel/<poll_id>/ — перегляд як у користувача + службова інфа:
     - загальна кількість голосів (Mongo)

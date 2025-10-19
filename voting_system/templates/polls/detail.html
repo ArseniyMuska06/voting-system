@@ -1,11 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
 {% load polls_extras %}
+{{ form.non_field_errors }}
+{{ field.errors }}
 
 <h2>{{ poll.title }}</h2>
 {% if poll.short_description %}<p>{{ poll.short_description }}</p>{% endif %}
 
-{% if is_finished %}
+{% if before_start %}
+  <div class="notice">Голосування ще не почалося. Початок: {{ poll.start_at|date:"d.m.Y H:i" }}</div>
+
+{% elif is_finished %}
   <div style="padding:10px; margin-bottom:12px; background:#f6f7f9; border:1px solid #e5e7eb; border-radius:8px;">
     Голосування завершено. Результати нижче.
   </div>

@@ -54,11 +54,6 @@ class PollDetailView(DetailView):
         # ТЕПЕР: пускаємо активні АБО завершені АБО ті, в яких end_at уже минув
         now = timezone.now()
         return (Poll.objects
-                .filter(
-                    models.Q(status=Poll.Status.ACTIVE) |
-                    models.Q(status=Poll.Status.COMPLETED) |
-                    models.Q(end_at__isnull=False, end_at__lt=now)
-                )
                 .select_related("admin")
                 .prefetch_related("options"))
 
@@ -78,25 +73,25 @@ class PollDetailView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         poll = self.object
-
-        # прапорець «завершене»
         now = timezone.now()
+
+        before_start = poll.start_at is not None and now < poll.start_at
         is_finished = (
             poll.status == Poll.Status.COMPLETED or
             (poll.end_at is not None and poll.end_at <= now)
         )
+
+        ctx["before_start"] = before_start
         ctx["is_finished"] = is_finished
 
-        # якщо завершене — рахуємо підсумки і (за наявності) кворум
         if is_finished:
             totals = tally_poll(poll)
             is_valid, validity_note = check_validity(poll, totals["total"])
             ctx["totals"] = totals
             ctx["is_valid"] = is_valid
             ctx["validity_note"] = validity_note
-        else:
-            # активне — показуємо форму, як і було
-            ctx["form"] = VoteForm(poll=poll)
+        elif not before_start:
+            ctx["form"] = VoteForm(poll=poll)  # форму показуємо лише в активний період
 
         return ctx
     

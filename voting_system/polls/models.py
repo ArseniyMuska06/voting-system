@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
-
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 class Poll(models.Model):
     class Status(models.TextChoices):
@@ -33,6 +34,11 @@ class Poll(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.get_status_display()})"
+    
+    def clean(self):
+        super().clean()
+        if self.start_at and self.end_at and self.start_at >= self.end_at:
+            raise ValidationError({"end_at": "Кінець має бути пізніше за початок."})
 
     class Meta:
         ordering = ["-created_at"]

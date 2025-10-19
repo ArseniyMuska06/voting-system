@@ -24,6 +24,12 @@ SECRET_KEY = 'django-insecure-dfd+l85ir!-(nku$0!iyis7*_0_jper9tckw))k3!%ux_z10e@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+""" LOGIN_URL = "accounts:login"
+LOGIN_REDIRECT_URL = "adminpanel:list"  # опціонально """
+
+LOGIN_URL = "login_user"           # головна сторінка логіну (за замовчуванням)
+LOGIN_REDIRECT_URL = "/polls/"     # куди потрапить звичайний користувач після входу
+
 ALLOWED_HOSTS = []
 
 
@@ -113,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kyiv'
 
 USE_I18N = True
 

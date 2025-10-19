@@ -8,7 +8,13 @@
       <div class="card">
         <h3><a href="{% url 'polls:detail' p.pk %}">{{ p.title }}</a></h3>
         {% if p.short_description %}<p>{{ p.short_description }}</p>{% endif %}
-        <div><small>Статус: {{ p.get_status_display }}</small></div>
+        <div>
+          <small>
+              {% comment %} Початок: {{ poll.start_at|date:"d.m.Y H:i" }},
+              Кінець: {{ poll.end_at|date:"d.m.Y H:i" }} {% endcomment %}
+              Статус: {{ p.get_status_display }}
+          </small>
+        </div>
       </div>
     {% endfor %}
   </div>
