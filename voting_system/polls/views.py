@@ -15,6 +15,18 @@ from django.contrib import messages
 from .models import Poll
 from .forms import VoteForm
 
+def _can_change_for_user(poll, user) -> bool:
+    """
+    Якщо є метод poll.can_change_vote_for(user) — використовуємо його.
+    Інакше — повертаємо значення булевого поля poll.can_change_vote.
+    """
+    meth = getattr(poll, "can_change_vote_for", None)
+    if callable(meth):
+        try:
+            return bool(meth(user))
+        except Exception:
+            return bool(getattr(poll, "can_change_vote", False))
+    return bool(getattr(poll, "can_change_vote", False))
 
 def _active_filter_qs():
     now = timezone.now()
@@ -84,6 +96,20 @@ class PollDetailView(DetailView):
         ctx["before_start"] = before_start
         ctx["is_finished"] = is_finished
 
+        user_has_voted = False
+        can_change_for_user = False
+
+        if not before_start and not is_finished and self.request.user.is_authenticated:
+            col = get_votes_collection()
+            uid = get_user_id_for_request(self.request)
+            existing = col.find_one({"poll_id": int(poll.pk), "user_id": uid})
+            user_has_voted = existing is not None
+            can_change_for_user = _can_change_for_user(poll, self.request.user)
+
+        ctx["user_has_voted"] = user_has_voted
+        ctx["can_change_for_user"] = can_change_for_user
+        ctx["show_already_voted_banner"] = bool(user_has_voted and not can_change_for_user)
+
         if is_finished:
             totals = tally_poll(poll)
             is_valid, validity_note = check_validity(poll, totals["total"])
@@ -119,18 +145,23 @@ class PollDetailView(DetailView):
             })
             return redirect("polls:confirm", pk=self.object.pk)
 
-        # вже голосував
-        if self.object.can_change_vote:
-            # дозволено змінювати → оновлюємо варіант
+       # Користувач уже голосував → або оновлюємо, або блокуємо
+        if _can_change_for_user(self.object, request.user):
+            # оновлюємо голос через уже наявний col/doc_filter
             col.update_one(
                 doc_filter,
                 {"$set": {"option_id": int(option.pk), "updated_at": timezone.now()}}
             )
             return redirect("polls:confirm", pk=self.object.pk)
-        else:
-            # заборонено змінювати → показуємо помилку
-            messages.error(request, "Ви вже голосували в цьому опитуванні. Змінювати голос заборонено.")
-            return render(request, self.template_name, {"poll": self.object, "form": form})
+
+        # Зміна заборонена → показуємо помилку і повертаємо той самий detail
+        messages.error(request, "Ви вже голосували. Змінювати голос заборонено.")
+
+        # Щоб банер з’явився, перераховуємо контекст:
+        ctx = self.get_context_data()            # self.object уже встановлено вище
+        ctx["form"] = VoteForm(poll=self.object) # форма знову на екрані
+        return render(request, self.template_name, ctx)
+
 
 
 def vote_confirm(request, pk):

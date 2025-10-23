@@ -59,9 +59,9 @@
 {% else %}
   {# Активне — як у тебе було #}
   {% has_voted poll as voted %}
-  {% if voted %}
-    <div style="padding:10px; margin-bottom:15px; background:#fff3cd; border:1px solid #ffeeba; border-radius:5px; color:#856404;">
-      Ви вже голосували в цьому голосуванні.
+  {% if show_already_voted_banner %}
+    <div style="padding:10px; margin-bottom:15px; background:#fff3cd; border:1px solid #ffeeba; border-radius:6px; color:#856404;">
+      Ви вже голосували в цьому опитуванні. Змінювати голос заборонено.
     </div>
   {% endif %}
   <form method="post">
