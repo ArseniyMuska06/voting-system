@@ -2,6 +2,13 @@
 {% block content %}
 <h1>Активні голосування</h1>
 
+{% if user.is_authenticated %}
+  <form method="post" action="{% url 'polls:logout' %}" style="margin-bottom: 20px;">
+    {% csrf_token %}
+    <button type="submit">Вийти з облікового запису</button>
+  </form>
+{% endif %}
+
 {% if polls %}
   <div class="cards">
     {% for p in polls %}

@@ -11,11 +11,16 @@ class UserRegisterForm(UserCreationForm):
         fields = ("username", "email", "password1", "password2")
 
 class UserProfileForm(forms.ModelForm):
+    patronymic = forms.CharField(required=False, help_text="(необов’язково)")
+    address = forms.CharField(required=False, help_text="(необов’язково)")
+
     class Meta:
         model = UserProfile
         fields = ("surname", "name", "patronymic", "oblast", "city", "address")
 
 class AdminProfileForm(forms.ModelForm):
+    patronymic = forms.CharField(required=False, help_text="(необов’язково)")
+    
     class Meta:
         model = AdminProfile
         fields = ("surname", "name", "patronymic", "country_of_origin", "institution")

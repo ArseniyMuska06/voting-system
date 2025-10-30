@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth.views import LogoutView
 from polls.views import home
 
 urlpatterns = [
@@ -8,4 +9,5 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("polls/", include("polls.urls")),
     path("adminpanel/", include("adminpanel.urls")),
+    path("logout/", LogoutView.as_view(next_page="/"), name="logout"),
 ]

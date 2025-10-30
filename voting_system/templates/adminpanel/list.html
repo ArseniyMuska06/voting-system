@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Мої голосування</h1>
+<header>
+  <h1>Мої голосування</h1>
+  <form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Вийти з облікового запису</button>
+  </form>
+</header>
 
 <p><a href="{% url 'adminpanel:create' %}">+ Створити нове</a></p>
 
@@ -12,8 +18,8 @@
         {% if p.short_description %}<p style="margin:0 0 6px; color:#666;">{{ p.short_description }}</p>{% endif %}
         <div style="font-size:90%; color:#555;">
           <div><strong>Статус:</strong> {{ p.get_status_display }}</div>
-          <div><strong>Початок:</strong> {{ poll.start_at|date:"d.m.Y H:i" }}</div>
-          <div><strong>Кінець:</strong> {{ poll.end_at|date:"d.m.Y H:i" }}</div>
+          <div><strong>Початок:</strong> {{ p.start_at|date:"d.m.Y H:i" }}</div>
+          <div><strong>Кінець:</strong> {{ p.end_at|date:"d.m.Y H:i" }}</div>
           <div><strong>Варіантів:</strong> {{ p.options.count }}</div>
         </div>
         <div style="margin-top:10px;">
