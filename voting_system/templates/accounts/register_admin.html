@@ -4,9 +4,6 @@
 <h2>Реєстрація адміністратора</h2>
 <form method="post">{% csrf_token %}
   {{ uform.as_p }}
-  <p>
-    ⚠️ Пароль не може містити символи [!@#$%^&*(),.?":{}|<>]
-  </p>
   {{ pform.as_p }}
   <button type="submit">Зареєструватися</button>
 </form>

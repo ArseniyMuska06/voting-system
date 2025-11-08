@@ -36,9 +36,9 @@ def register_admin(request):
         if uform.is_valid() and pform.is_valid():
             password = uform.cleaned_data.get("password1")
 
-            if re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+            """ if re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
                 messages.error(request, "Пароль не повинен містити спеціальних символів (!@#$%^&* тощо), оскільки не зможете пройти далі")
-                return render(request, "accounts/register_admin.html", {"uform": uform, "pform": pform})
+                return render(request, "accounts/register_admin.html", {"uform": uform, "pform": pform}) """
 
             user = uform.save()
             profile = pform.save(commit=False)
