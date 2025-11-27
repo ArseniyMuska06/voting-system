@@ -1,11 +1,53 @@
 {% extends "base.html" %}
-{% block content %}
-<h2>Підтвердження</h2>
-<p>Ваш голос зараховано. Дякуємо!</p>
-<p><a href="{% url 'polls:list' %}">Повернутися до списку</a></p>
 
-<script>
-  // авто-повернення через 2 секунди
-  setTimeout(function(){ window.location = "{% url 'polls:list' %}"; }, 2000);
-</script>
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/polls-confirm.css' %}">
+{% endblock %}
+
+{% block content %}
+<body>
+  <header>
+    <div class="header-content">
+      <p>Система голосування</p>
+
+      <div>
+        {% if user.is_authenticated %}
+          <form method="post" action="{% url 'polls:logout' %}">
+            {% csrf_token %}
+            <button class="back" type="submit">Вийти</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <article id="congrats">
+      <h2>Підтвердження</h2>
+      <p>Ваш голос зараховано. Дякуємо!</p>
+      <p><a href="{% url 'polls:list' %}">Повернутися до списку</a></p>
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>
+        &copy; 2025 Система голосування. Всі права захищені.
+      </p>
+      <p>
+        Система голосування
+      </p>
+      <p>
+        <a href="mailto:bohdan.horon@lnu.edu.ua">bohdan.horon@lnu.edu.ua</a> <br>
+        <a href="mailto:arsenii.muska@lnu.edu.ua">arsenii.muska@lnu.edu.ua</a>
+      </p>
+    </div>
+  </footer>
+  <script>
+    // авто-повернення через 2 секунди
+    setTimeout(function(){ window.location = "{% url 'polls:list' %}"; }, 2000);
+  </script>
+</body>
 {% endblock %}

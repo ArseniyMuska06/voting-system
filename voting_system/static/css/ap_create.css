@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@media screen and (max-width: 750px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 2em;
+    }
+    .footer-content a {
+        line-height: 2;
+    }
+}
+
+.gray {
+    color: hsl(240, 2%, 52%);
+}
+.lightgray {
+    color: hsl(240, 2%, 82%);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background: hsl(224, 46%, 21%);
+}
+.header-content {
+    margin: 0 auto;
+    padding: 1.5em 2em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1300px;
+}
+.header-content div{
+    display: flex;
+    gap: 1em;
+}
+header .back {
+    text-decoration: none;
+    padding: 0.75em 2em;
+    border-radius: 15px;
+    font: inherit;
+    color: white;
+    background: #5b7fff;
+    border: none;
+}
+header .back:hover {
+    background: #6b8aff;
+}
+
+main {
+    background: hsl(229, 34%, 15%);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+#poll_create {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 3em 2em;
+    gap: 1.5em;
+}
+
+#poll_create h1 {
+    width: 100%;
+    max-width: 850px;
+    align-items: start;
+}
+
+.edit_content {
+    width: 100%;
+    max-width: 850px;
+    background: hsl(224, 46%, 25%);
+    padding: 2em;
+    border-radius: 15px; 
+}
+
+.poll_params .head_p {
+    padding-bottom: 1em;
+    border-bottom: 1px solid hsl(224, 46%, 35%);
+}
+.poll_params {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+    border: none;
+    margin-bottom: 1.5em;
+}
+.poll_params p {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+.poll_params p input,
+.poll_params p select {
+    border-radius: 15px;
+    padding: 0.75em 0.5em;
+    font: inherit;
+    color: white;
+    background: hsl(229, 34%, 15%);
+    border: 1px solid hsl(229, 34%, 25%);
+}
+.poll_params p input:focus,
+.poll_params p select:focus {
+    border: 2px solid #5b7fff;
+    outline: none;
+}
+.poll_params p .helptext {
+    color:hsl(240, 2%, 82%);
+    font-size:14px;
+}
+.poll_params p:has(label[for="id_can_change_vote"]) {
+    flex-direction: row;
+}
+.poll_params p:has(label[for="id_can_change_vote"]) input {
+    margin-left: 0.25em;
+    transform: scale(1.5);
+}
+.poll_params p input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: brightness(0) invert(1);
+}
+
+.poll_opts .head_p {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    padding-bottom: 0.75em;
+    border-bottom: 1px solid hsl(224, 46%, 35%);
+}
+.poll_opts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+    border: none;
+    padding-bottom: 2em;
+}
+
+.po_content {
+    background: hsl(229, 34%, 15%);
+    border: 1px solid hsl(229, 34%, 25%);
+    border-radius: 15px;
+    padding: 1.2em;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5em;
+}
+.po_content input {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    padding: 0.75em 0.5em;
+    font: inherit;
+    color: white;
+    border: none;
+    background: hsl(224, 46%, 25%);
+}
+.po_content input:focus {
+    border: 2px solid #5b7fff;
+    outline: none;
+}
+.po_content input[type=number] {
+    width: 110px;
+}
+
+@media (max-width: 750px) {
+    .po_content input[type=number] {
+        width: 100%;
+    }
+}
+
+.poll_buttons {
+    border-top: 1px solid hsl(224, 46%, 35%);
+    padding-top: 1.5em;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 2em;
+}
+.poll_buttons a {
+    display: block;
+    color: hsl(240, 2%, 82%);
+    text-decoration: none;
+    cursor: default;
+}
+.poll_buttons a:hover {
+    color: #5b7fff;
+}
+.poll_buttons button {
+    padding: 0.75em 2em;
+    border-radius: 15px;
+    font: inherit;
+    color: white;
+    background: #5b7fff;
+    border: none;
+}
+
+footer {
+    background: hsl(224, 46%, 17%);
+}
+
+.footer-content {
+    color: hsl(240, 2%, 42%);
+    display: flex;
+    padding: 1.5em 2em;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+.footer-content p a {
+    color: hsl(240, 2%, 42%);
+    text-decoration: none;
+}
+
+.footer-content p a:hover {
+    color: #8092eb;
+}

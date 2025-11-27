@@ -1,38 +1,124 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}Головна{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
 {% block content %}
-  <!-- <h2>Ласкаво просимо</h2> -->
-  <button onclick="document.getElementById('login-modal').showModal()">Вхід</button>
+<body>
+  <div id="login-modal">
+    <div class="modal-container">
+      <form method="dialog">
+        <button onclick="document.getElementById('login-modal').style.display = 'none'">
+          <img src="{% static 'img/close.svg' %}" width="20" height="20">
+        </button>
+        <p>Увійти як</p>
+        <a class="modal-user-btn" href="/accounts/login">Користувач</a>
+        <a class="modal-admin-btn" href="/accounts/login-admin">Адмін</a>
+      </form>
+    </div>
+  </div>
 
-  <dialog id="login-modal">
-    <form method="dialog">
-      <h3>Увійти як</h3>
-      <p>
-        <a href="/accounts/login">Користувач</a>
-      </p>
-      <p>
-        <a href="/accounts/login-admin">Адмін</a>
-      </p>
-      <menu>
-        <button>Закрити</button>
-      </menu>
-    </form>
-  </dialog>
+  <div id="register-modal">
+    <div class="modal-container">
+      <form method="dialog">
+        <button onclick="document.getElementById('register-modal').style.display = 'none'">
+          <img src="{% static 'img/close.svg' %}" width="20" height="20">
+        </button>
+        <p>Зареєструватися як</p>
+        <a class="modal-user-btn" href="/accounts/register">Користувач</a>
+        <a class="modal-admin-btn" href="/accounts/register-admin">Адмін</a>
+      </form>
+    </div>
+  </div>
 
-  <button onclick="document.getElementById('register-modal').showModal()">Реєстрація</button>
+  <header>
+    <div class="header-content">
+      <p>Система голосування</p>
 
-  <dialog id="register-modal">
-    <form method="dialog">
-      <h3>Зареєструватися як</h3>
+      <div>
+        <button class="login" onclick="document.getElementById('login-modal').style.display = 'block'">Вхід</button>
+        <button class="register" onclick="document.getElementById('register-modal').style.display = 'block'">Реєстрація</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <article id="reasons">
+      <div class="reasons-content">
+        <p>
+          Чому варто обрати нашу систему голосувань?
+        </p>
+
+        <ul>
+          <li>
+            Безпечний і прозорий процес голосування
+          </li>
+          <li>
+            Розумна логіка етапів голосування
+          </li>
+          <li>
+            Потужна адмінпанель з аналітикою в реальному часі
+          </li>
+          <li>
+            Рольовий доступ і надійна авторизація
+          </li>
+          <li>
+            Зручний інтерфейс і дружній UX
+          </li>
+        </ul>
+      </div>
+    </article>
+
+    <article id="meet">
+      <div class="meet-content">
       <p>
-        <a href="/accounts/register">Користувач</a>
+        Ті хто працював над проектом
+      </p>
+
+      <figure>
+        {% comment %} <img src="https://placehold.co/200x200" alt="" loading="lazy" width="200" height="200"> {% endcomment %}
+        <figcaption>
+          <p>Горон Богдан Ігорович</p>
+          <p class="purple-p">Науковий керівник проєкту</p>
+          <p class="light-grey-p">Доцент кафедри оптоелектроніки та інформаційних технологій, аспірант Фізичного факультету ЛНУ ім. Івана Франка. Спеціалізується на моделюванні фізичних процесів у кристалах, зокрема на розрахунках від перших принципів та вивченні фазових переходів у фероелектричних матеріалах. Поєднує фундаментальну фізику з сучасними ІТ-підходами, працює над міждисциплінарними дослідженнями.</p>
+          <p class="light-grey-p">Викладає курси з аналізу складних систем, комп’ютерної лінгвістики, NLP, основ оптоелектроніки та Python. Має освітній ступінь магістра зі спеціальності «Прикладна фізика та наноматеріали» та з 2020 року навчається в аспірантурі.</p>
+          <p class="grey-p">“Поєднання фундаментальної науки та технологій відкриває шлях до рішень, які змінюють уявлення про можливе.”</p>
+        </figcaption>
+      </figure>
+
+      <hr>
+
+      <figure>
+        {% comment %} <img src="{% static 'img/arsen-muska.jpg' %}" alt="" loading="lazy" width="200" height="200"> {% endcomment %}
+        <figcaption>
+          <p>Муска Арсеній Олександрович</p>
+          <p class="purple-p">Розробник проєкту</p>
+          <p class="light-grey-p">Студент спеціальності «Комп’ютерні науки» та розробник, який працює з вебтехнологіями та Python. Займається створенням веб-систем, інструментів для роботи з даними та інтерактивних застосунків, поєднуючи алгоритмічне мислення з практичним досвідом у програмуванні.</p>
+          <p class="light-grey-p">Працює над навчальними та дослідницькими IT-проєктами, активно розвивається у напрямку JavaScript/React. Орієнтується на якість, структурність та побудову інструментів, які приносять реальну користь користувачам.</p>
+          <p class="grey-p">“Технології — це спосіб перетворити ідеї на працюючі рішення. Моє завдання — створювати системи, які вирішують проблеми та роблять цифровий світ кращим.”</p>
+        </figcaption>
+      </figure>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>
+        &copy; 2025 Система голосування. Всі права захищені.
       </p>
       <p>
-        <a href="/accounts/register-admin">Адмін</a>
+        Система голосування
       </p>
-      <menu>
-        <button>Закрити</button>
-      </menu>
-    </form>
-  </dialog>
+      <p>
+        <a href="mailto:bohdan.horon@lnu.edu.ua">bohdan.horon@lnu.edu.ua</a> <br>
+        <a href="mailto:arsenii.muska@lnu.edu.ua">arsenii.muska@lnu.edu.ua</a>
+      </p>
+    </div>
+  </footer>
+</body>
 {% endblock %}

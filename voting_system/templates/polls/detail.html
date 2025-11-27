@@ -1,75 +1,131 @@
 {% extends "base.html" %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/polls_detail.css' %}">
+{% endblock %}
+
 {% block content %}
 {% load polls_extras %}
 {{ form.non_field_errors }}
 {{ field.errors }}
 
-<h2>{{ poll.title }}</h2>
-{% if poll.short_description %}<p>{{ poll.short_description }}</p>{% endif %}
+<body>
+  <header>
+    <div class="header-content">
+      <p>Система голосування</p>
 
-{% if before_start %}
-  <div class="notice">Голосування ще не почалося. Початок: {{ poll.start_at|date:"d.m.Y H:i" }}</div>
-
-{% elif is_finished %}
-  <div style="padding:10px; margin-bottom:12px; background:#f6f7f9; border:1px solid #e5e7eb; border-radius:8px;">
-    Голосування завершено. Результати нижче.
-  </div>
-
-  {# Бейдж дійсності #}
-  <div style="margin:6px 0 14px;">
-    {% if is_valid %}
-      <span style="display:inline-block;padding:4px 10px;border-radius:999px;background:#e6ffed;color:#046c4e;font-weight:600;">
-        Дійсне
-      </span>
-    {% else %}
-      <span style="display:inline-block;padding:4px 10px;border-radius:999px;background:#ffeaea;color:#7a0010;font-weight:600;">
-        Недійсне
-      </span>
-    {% endif %}
-    {% if validity_note %}<small style="margin-left:8px;color:#666;">{{ validity_note }}</small>{% endif %}
-  </div>
-
-  {# Таблиця результатів #}
-  <table style="width:100%; border-collapse:collapse;">
-    <thead>
-      <tr>
-        <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">Варіант</th>
-        <th style="text-align:right; padding:8px; border-bottom:1px solid #ddd;">Кількість</th>
-        <th style="text-align:right; padding:8px; border-bottom:1px solid #ddd;">Відсоток</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for row in totals.by_option %}
-      <tr>
-        <td style="padding:8px; border-bottom:1px solid #f0f0f0;">{{ row.option.text }}</td>
-        <td style="padding:8px; border-bottom:1px solid #f0f0f0; text-align:right;">{{ row.count }}</td>
-        <td style="padding:8px; border-bottom:1px solid #f0f0f0; text-align:right;">{{ row.percent }}%</td>
-      </tr>
-      {% endfor %}
-      <tr>
-        <td style="padding:8px; border-top:2px solid #ccc; font-weight:600;">Всього</td>
-        <td style="padding:8px; border-top:2px solid #ccc; text-align:right; font-weight:600;">{{ totals.total }}</td>
-        <td style="padding:8px; border-top:2px solid #ccc; text-align:right; font-weight:600;">
-          {% if totals.total %}100%{% else %}0%{% endif %}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-{% else %}
-  {# Активне — як у тебе було #}
-  {% has_voted poll as voted %}
-  {% if show_already_voted_banner %}
-    <div style="padding:10px; margin-bottom:15px; background:#fff3cd; border:1px solid #ffeeba; border-radius:6px; color:#856404;">
-      Ви вже голосували в цьому опитуванні. Змінювати голос заборонено.
+      <div>
+        {% if user.is_authenticated %}
+          <form method="post" action="{% url 'polls:logout' %}">
+            {% csrf_token %}
+            <button class="back" type="submit">Вийти</button>
+          </form>
+        {% endif %}
+      </div>
     </div>
-  {% endif %}
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Проголосувати</button>
-  </form>
-{% endif %}
+  </header>
 
-<p style="margin-top:12px;"><a href="{% url 'polls:list' %}">← До списку</a></p>
+  <main>
+  <article id="vote">
+    {% if before_start %}
+      <div class="before-vote">
+        <h2>{{ poll.title }}</h2>
+        <div class="notice">Голосування ще не почалося. Початок: {{ poll.start_at|date:"d.m.Y H:i" }}</div>
+      </div>
+
+    {% elif is_finished %}
+      <div class="after-vote">
+        <h2>{{ poll.title }}</h2>
+        {% if poll.short_description %}<p>{{ poll.short_description }}</p>{% endif %}
+        <div>
+          Голосування завершено. Результати нижче
+        </div>
+      
+        {# Бейдж дійсності #}
+        <div style="margin:6px 0 14px;">
+          {% if is_valid %}
+            <span style="display:inline-block;padding:4px 10px;border-radius:999px;background:#e6ffed;color:#046c4e;font-weight:600;">
+              Дійсне
+            </span>
+          {% else %}
+            <span style="display:inline-block;padding:4px 10px;border-radius:999px;background:#ffeaea;color:#7a0010;font-weight:600;margin:0.5em 0;">
+              Недійсне
+            </span>
+          {% endif %}
+          {% if validity_note %}<small style="margin-left:8px;color:#666;">{{ validity_note }}</small>{% endif %}
+        </div>
+      
+
+        {# Таблиця результатів #}
+        <div class="content-table">
+        <table style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th style="text-align:left; padding:8px; border-bottom:1px solid #ddd;">Варіант</th>
+              <th style="text-align:right; padding:8px; border-bottom:1px solid #ddd;">Кількість</th>
+              <th style="text-align:right; padding:8px; border-bottom:1px solid #ddd;">Відсоток</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in totals.by_option %}
+            <tr>
+              <td style="padding:8px; border-bottom:1px solid #f0f0f0;">{{ row.option.text }}</td>
+              <td style="padding:8px; border-bottom:1px solid #f0f0f0; text-align:right;">{{ row.count }}</td>
+              <td style="padding:8px; border-bottom:1px solid #f0f0f0; text-align:right;">{{ row.percent }}%</td>
+            </tr>
+            {% endfor %}
+            <tr>
+              <td style="padding:8px; border-top:2px solid #ccc; font-weight:600;">Всього</td>
+              <td style="padding:8px; border-top:2px solid #ccc; text-align:right; font-weight:600;">{{ totals.total }}</td>
+              <td style="padding:8px; border-top:2px solid #ccc; text-align:right; font-weight:600;">
+                {% if totals.total %}100%{% else %}0%{% endif %}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+    {% else %}
+      {# Активне — як у тебе було #}
+      <p class="back-to-polls">
+        <a href="{% url 'polls:list' %}">← До списку</a>
+      </p>
+      <div class="active-vote">
+        <p>{{ poll.title }}</p>
+        <hr>
+        {% if poll.short_description %}<p style="margin: 0.5em 0">{{ poll.short_description }}</p>{% endif %}
+        {% has_voted poll as voted %}
+        {% if show_already_voted_banner %}
+          <div style="padding:10px; margin-bottom:15px; background:#fff3cd; border:1px solid #ffeeba; border-radius:6px; color:#856404;">
+            Ви вже голосували в цьому опитуванні. Змінювати голос заборонено.
+          </div>
+        {% endif %}
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">Проголосувати</button>
+        </form>
+      </div>
+    {% endif %}
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>
+        &copy; 2025 Система голосування. Всі права захищені.
+      </p>
+      <p>
+        Система голосування
+      </p>
+      <p>
+        <a href="mailto:bohdan.horon@lnu.edu.ua">bohdan.horon@lnu.edu.ua</a> <br>
+        <a href="mailto:arsenii.muska@lnu.edu.ua">arsenii.muska@lnu.edu.ua</a>
+      </p>
+    </div>
+  </footer>
+</body>
 {% endblock %}

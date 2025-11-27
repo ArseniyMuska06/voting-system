@@ -1,35 +1,71 @@
 {% extends "base.html" %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ap_list.css' %}">
+{% endblock %}
+
 {% block content %}
-<header>
-  <h1>Мої голосування</h1>
-  <form action="{% url 'logout' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Вийти з облікового запису</button>
-  </form>
-</header>
+<body>
+  <header>
+    <div class="header-content">
+      <p>Система голосувань</p>
 
-<p><a href="{% url 'adminpanel:create' %}">+ Створити нове</a></p>
-
-{% if polls %}
-  <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:14px;">
-    {% for p in polls %}
-      <div style="border:1px solid #ddd; border-radius:8px; padding:12px;">
-        <h3 style="margin:0 0 8px;"><a href="{% url 'adminpanel:detail' p.pk %}">{{ p.title }}</a></h3>
-        {% if p.short_description %}<p style="margin:0 0 6px; color:#666;">{{ p.short_description }}</p>{% endif %}
-        <div style="font-size:90%; color:#555;">
-          <div><strong>Статус:</strong> {{ p.get_status_display }}</div>
-          <div><strong>Початок:</strong> {{ p.start_at|date:"d.m.Y H:i" }}</div>
-          <div><strong>Кінець:</strong> {{ p.end_at|date:"d.m.Y H:i" }}</div>
-          <div><strong>Варіантів:</strong> {{ p.options.count }}</div>
-        </div>
-        <div style="margin-top:10px;">
-          <a href="{% url 'adminpanel:detail' p.pk %}">Відкрити</a>
-        </div>
+      <div>
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button class="back" type="submit">Вийти</button>
+        </form>
       </div>
-    {% endfor %}
-  </div>
-{% else %}
-  <p>Поки що немає опитувань.</p>
-{% endif %}
+    </div>
+  </header>
 
+  <main>
+    <article id="my_polls">
+      <div class="polls_header">
+        <h1>Мої голосування</h1>
+        <a href="{% url 'adminpanel:create' %}">Створити</a>
+      </div>
+      {% if polls %}
+        <div class="polls_content">
+          {% for p in polls %}
+            <div class="poll">
+              <div class="poll_head">
+                <p>{{ p.title }}</p>
+                <div class="poll_active">{{ p.get_status_display }}</div>
+              </div>
+              {% if p.short_description %}<p>{{ p.short_description }}</p>{% endif %}
+              <div class="poll_statuses">
+                <div><p class="lightgray">Початок:</p> {{ p.start_at|date:"d.m.Y H:i" }}</div>
+                <div><p class="lightgray">Кінець:</p> {{ p.end_at|date:"d.m.Y H:i" }}</div>
+                <div><p class="lightgray">Варіантів:</p> {{ p.options.count }}</div>
+              </div>
+              <a class="poll_button" href="{% url 'adminpanel:detail' p.pk %}">Відкрити</a>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+      <div class="no-voting">
+        <p>Поки що немає опитувань</p>
+      </div>
+      {% endif %}
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>
+        &copy; 2025 Система голосування. Всі права захищені.
+      </p>
+      <p>
+        Система голосування
+      </p>
+      <p>
+        <a href="mailto:bohdan.horon@lnu.edu.ua">bohdan.horon@lnu.edu.ua</a> <br>
+        <a href="mailto:arsenii.muska@lnu.edu.ua">arsenii.muska@lnu.edu.ua</a>
+      </p>
+    </div>
+  </footer>
+</body>
 {% endblock %}

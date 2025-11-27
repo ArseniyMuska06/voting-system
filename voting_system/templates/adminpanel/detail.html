@@ -1,67 +1,119 @@
 {% extends "base.html" %}
 {% load polls_extras %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ap_detail.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>{{ poll.title }}</h1>
-{% if poll.short_description %}<p>{{ poll.short_description }}</p>{% endif %}
+<body>
+  <header>
+    <div class="header-content">
+      <p>Система голосувань</p>
 
-<div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:16px;">
-  <div style="border:1px solid #ddd; border-radius:8px; padding:12px;">
-    <h3>Інформація</h3>
-    <p><strong>Статус:</strong> {{ poll.get_status_display }}</p>
-    <p><strong>Початок:</strong> {{ poll.start_at|default:"—" }}</p>
-    <p><strong>Кінець:</strong> {{ poll.end_at|default:"—" }}</p>
-    <p><strong>Дозволена зміна голосу:</strong> {{ poll.can_change_vote|yesno:"Так,Ні" }}</p>
-    <p><strong>Кворум:</strong> {{ poll.quorum }}%</p>
-    <p><strong>Очікуваний корпус:</strong> {{ poll.expected_turnout|default:"—" }}</p>
-  </div>
+      <div>
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button class="back" type="submit">Вийти</button>
+        </form>
+      </div>
+    </div>
+  </header>
 
-  <div style="border:1px solid #ddd; border-radius:8px; padding:12px;">
-    <h3>Статистика (Mongo)</h3>
-    <p><strong>Загалом голосів:</strong> {{ total_votes }}</p>
-    <p>
-      <strong>Кворум потрібен:</strong>
-      {% if need_votes %} {{ need_votes }} {% else %} — {% endif %}
-    </p>
-    <p>
-      <strong>Дійсність за кворумом:</strong>
-      {% if valid is None %} Н/Д (немає expected_turnout)
-      {% elif valid %} Так
-      {% else %} Ні
-      {% endif %}
-    </p>
-  </div>
-</div>
+  <main>
+    <article id="poll_detail">
+      <div class="poll_back">
+        <a href="{% url 'adminpanel:list' %}">До списку</a>
+      </div>
+      <div class="poll_head">
+        <p>{{ poll.title }}</p>
+        <div class="poll_active">{{ poll.get_status_display }}</div>
+      </div>
+      {% if poll.short_description %}<p style="width:100%;max-width:1240px;">{{ poll.short_description }}</p>{% endif %}
 
-<div style="border:1px solid #ddd; border-radius:8px; padding:12px; margin-bottom:16px;">
-  <h3>Варіанти</h3>
-  <table border="1" cellpadding="6" cellspacing="0">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Текст</th>
-        <th>Голосів</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for opt in poll.options.all %}
-        <tr>
-          <td>{{ opt.order }}</td>
-          <td>{{ opt.text }}</td>
-          <td>{{ option_votes|get_item:opt.pk|default:0 }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+      <div class="poll_content">
+        <div class="poll_info">
+          <p>Інформація</p>
+          <div style="display:flex;align-items:center"><p class="lightgray">Статус:</p> <div class="poll_active">{{ poll.get_status_display }}</div></div>
+          <hr>
+          <div><p class="lightgray">Початок:</p> {{ poll.start_at|default:"—" }}</div>
+          <hr>
+          <div><p class="lightgray">Кінець:</p> {{ poll.end_at|default:"—" }}</div>
+          <hr>
+          <div><p class="lightgray">Дозволена зміна голосу:</p> {{ poll.can_change_vote|yesno:"Так,Ні" }}</div>
+          <hr>
+          <div><p class="lightgray">Кворум:</p> {{ poll.quorum }}%</div>
+          <hr>
+          <div><p class="lightgray">Очікуваний корпус:</p> {{ poll.expected_turnout|default:"—" }}</div>
+        </div>
 
-{% if poll.status != "completed" %}
-  <form method="post" action="{% url 'adminpanel:finish_now' poll.pk %}" onsubmit="return confirm('Завершити зараз?');">
-    {% csrf_token %}
-    <button type="submit">Завершити зараз</button>
-  </form>
-{% else %}
-  <p><em>Опитування вже завершене.</em></p>
-{% endif %}
+        <div class="poll_stats">
+          <p>Статистика</p>
+          <div><p class="lightgray">Загалом голосів:</p> {{ total_votes }}</div>
+          <hr>
+          <div>
+            <p class="lightgray">Кворум потрібен:</p>
+            {% if need_votes %} {{ need_votes }} {% else %} — {% endif %}
+          </div>
+          <hr>
+          <div>
+            <p class="lightgray">Дійсність за кворумом:</p>
+            {% if valid is None %} Н/Д (немає expected_turnout)
+            {% elif valid %} Так
+            {% else %} Ні
+            {% endif %}
+          </div>
+        </div>
 
-<p style="margin-top:12px;"><a href="{% url 'adminpanel:list' %}">← До списку</a></p>
+        <div class="poll_results">
+          <p>Варіанти</p>
+          <table border="1" cellpadding="6" cellspacing="0">
+            <thead>
+              <tr class="tr_head">
+                <td><strong class="lightgray">#</strong></td>
+                <td><strong class="lightgray">Текст</strong></td>
+                <td class="votes_c"><strong class="lightgray">Голосів</strong></td>
+              </tr>
+            </thead>
+            <tbody>
+              {% for opt in poll.options.all %}
+                <tr>
+                  <td>{{ opt.order }}</td>
+                  <td>{{ opt.text }}</td>
+                  <td class="votes_c">{{ option_votes|get_item:opt.pk|default:0 }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% if poll.status != "completed" %}
+          <form method="post" action="{% url 'adminpanel:finish_now' poll.pk %}" onsubmit="return confirm('Завершити зараз?');">
+            {% csrf_token %}
+            <button class="poll_finish" type="submit">Завершити</button>
+          </form>
+        {% else %}
+          <p class="poll_finished">Опитування вже завершене</p>
+        {% endif %}
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>
+        &copy; 2025 Система голосування. Всі права захищені.
+      </p>
+      <p>
+        Система голосування
+      </p>
+      <p>
+        <a href="mailto:bohdan.horon@lnu.edu.ua">bohdan.horon@lnu.edu.ua</a> <br>
+        <a href="mailto:arsenii.muska@lnu.edu.ua">arsenii.muska@lnu.edu.ua</a>
+      </p>
+    </div>
+  </footer>
+</body>
 {% endblock %}

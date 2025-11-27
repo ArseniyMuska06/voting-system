@@ -1,0 +1,250 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@media screen and (max-width: 750px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 2em;
+    }
+    .footer-content a {
+        line-height: 2;
+    }
+}
+
+.gray {
+    color: hsl(240, 2%, 52%);
+}
+.lightgray {
+    color: hsl(240, 2%, 82%);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background: hsl(224, 46%, 21%);
+}
+.header-content {
+    margin: 0 auto;
+    padding: 1.5em 2em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1300px;
+}
+.header-content div{
+    display: flex;
+    gap: 1em;
+}
+header .back {
+    text-decoration: none;
+    padding: 0.75em 2em;
+    border-radius: 15px;
+    font: inherit;
+    color: white;
+    background: #5b7fff;
+    border: none;
+}
+header .back:hover {
+    background: #6b8aff;
+}
+
+main {
+    background: hsl(229, 34%, 15%);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+#poll_detail {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 3em 2em;
+    gap: 1.5em;
+}
+.poll_back {
+    display: inline-block;
+    width: 100%;
+    max-width: 1240px;
+}
+.poll_back a {
+    text-decoration: none;
+    color: #5b7fff;
+}
+.poll_back a:hover {
+    color: #6b8aff;
+}
+
+.poll_head {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1240px;
+}
+.poll_active {
+    border-radius: 5px;
+    background-color: green;
+    padding: 0.5em 1em;
+}
+
+.poll_content {
+    display: flex;
+    width: 100%;
+    max-width: 1240px;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.poll_info {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5em;
+    background: hsl(224, 46%, 25%);
+    justify-content: space-between;
+    border-radius: 10px;
+    gap: 1.5em;
+    width: 48%;
+    border-radius:8px; 
+    padding: 2em;
+    padding-bottom: 3em;
+}
+.poll_info div {
+    display: flex;
+    justify-content: space-between;
+}
+.poll_info hr {
+    border: 1px solid hsl(224, 46%, 30%);
+    margin-top: 0;
+}
+
+.poll_stats {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5em;
+    background: hsl(224, 46%, 25%);
+    border-radius: 10px;
+    gap: 2em;
+    width: 48%;
+    border-radius:8px; 
+    padding: 2em;
+    padding-bottom: 3em;
+}
+.poll_stats div {
+    display: flex;
+    justify-content: space-between;
+}
+.poll_stats hr {
+    border: 1px solid hsl(224, 46%, 30%);
+    margin-top: 0;
+}
+
+.poll_results {
+    width: 98%;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5em;
+    background: hsl(224, 46%, 25%);
+    border-radius: 10px;
+    gap: 1em;
+    border-radius:8px; 
+    padding: 2em;
+    padding-bottom: 3em;
+}
+
+.poll_results table,
+.poll_results table th,
+.poll_results table td {
+    border: none;
+}
+
+.poll_results table th,
+.poll_results table td {
+    border-bottom: 1px solid hsl(224, 46%, 35%);
+    padding: 1em;
+}
+
+.poll_results table .tr_head:hover {
+    background: hsl(224, 46%, 25%);
+}
+.poll_results table tr:hover {
+    background: hsl(224, 46%, 20%);
+}
+
+.poll_results table .votes_c {
+    text-align: right;
+}
+
+@media (max-width: 850px) {
+
+    .poll_info {
+        width: 100%;
+    }
+
+    .poll_stats {
+        width: 100%;
+    }
+
+    .poll_results {
+        width: 100%;
+    }
+}
+
+.poll_finish {
+    text-decoration: none;
+    padding: 1em 3em;
+    border-radius: 10px;
+    font: inherit;
+    color: white;
+    background: hsl(24, 100%, 50%);
+    border: none;
+}
+.poll_finish:hover {
+    background: hsl(24, 100%, 60%);
+}
+
+.poll_finished {
+    text-decoration: none;
+    padding: 1em 3em;
+    border-radius: 10px;
+    font: inherit;
+    color: white;
+    background: hsl(229, 34%, 15%);
+    border: none;
+}
+
+footer {
+    background: hsl(224, 46%, 17%);
+}
+
+.footer-content {
+    color: hsl(240, 2%, 42%);
+    display: flex;
+    padding: 1.5em 2em;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+.footer-content p a {
+    color: hsl(240, 2%, 42%);
+    text-decoration: none;
+}
+
+.footer-content p a:hover {
+    color: #8092eb;
+}

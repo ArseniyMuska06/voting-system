@@ -1,10 +1,48 @@
 {% extends "base.html" %}
 {{ form.as_p }}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/register_user.css' %}">
+{% endblock %}
+
 {% block content %}
-<h2>Реєстрація користувача</h2>
-<form method="post">{% csrf_token %}
-  {{ uform.as_p }}
-  {{ pform.as_p }}
-  <button type="submit">Зареєструватися</button>
-</form>
+<body>
+  <header>
+    <div class="header-content">
+      <p>Система голосування</p>
+
+      <div>
+        <a class="back" href="/">Назад</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <article id="content">
+      <p>Реєстрація користувача</p>
+      <form method="post">{% csrf_token %}
+        {{ uform.as_p }}
+        {{ pform.as_p }}
+        <button type="submit">Зареєструватися</button>
+      </form>
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>
+        &copy; 2025 Система голосування. Всі права захищені.
+      </p>
+      <p>
+        Система голосування
+      </p>
+      <p>
+        <a href="mailto:bohdan.horon@lnu.edu.ua">bohdan.horon@lnu.edu.ua</a> <br>
+        <a href="mailto:arsenii.muska@lnu.edu.ua">arsenii.muska@lnu.edu.ua</a>
+      </p>
+    </div>
+  </footer>
+</body>
 {% endblock %}

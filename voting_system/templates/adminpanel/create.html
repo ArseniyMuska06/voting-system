@@ -1,31 +1,77 @@
 {% extends "base.html" %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ap_create.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>Створення голосування</h1>
+<body>
+  <header>
+    <div class="header-content">
+      <p>Система голосувань</p>
 
-<form method="post">
-  {% csrf_token %}
-
-  <fieldset style="border:1px solid #ddd; padding:12px; border-radius:8px; margin-bottom:14px;">
-    <legend>Параметри опитування</legend>
-    {{ poll_form.as_p }}
-  </fieldset>
-
-  <fieldset style="border:1px solid #ddd; padding:12px; border-radius:8px;">
-    <legend>Варіанти (мінімум 2)</legend>
-    {{ formset.management_form }}
-    {% for form in formset %}
-      <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
-        {{ form.text.label_tag }} {{ form.text }}
-        {{ form.order.label_tag }} {{ form.order }}
-        {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
-        {% if form.errors %}<div style="color:crimson;">{{ form.errors }}</div>{% endif %}
+      <div>
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button class="back" type="submit">Вийти</button>
+        </form>
       </div>
-    {% endfor %}
-  </fieldset>
+    </div>
+  </header>
 
-  <div style="margin-top:12px;">
-    <button type="submit">Створити</button>
-    <a href="{% url 'adminpanel:list' %}">Скасувати</a>
-  </div>
-</form>
+  <main>
+    <form id="poll_create" method="post">
+      {% csrf_token %}
+
+      <h1>Створення голосування</h1>
+
+      <div class="edit_content">
+
+      <fieldset class="poll_params">
+        <p class="head_p">Параметри опитування</p>
+        {{ poll_form.as_p }}
+      </fieldset>
+
+      <fieldset class="poll_opts">
+        <div class="head_p">
+          <p>Варіанти</p>
+          <p style="color:hsl(240, 2%, 82%);font-size:14px">(мінімум 2)</p>
+        </div>
+        {{ formset.management_form }}
+        {% for form in formset %}
+          <div class="po_content">
+            {{ form.text.label_tag }} {{ form.text }}
+            {{ form.order.label_tag }} {{ form.order }}
+            {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+            {% if form.errors %}<div style="color:crimson;">{{ form.errors }}</div>{% endif %}
+          </div>
+        {% endfor %}
+      </fieldset>
+
+      <div class="poll_buttons">
+        <a href="{% url 'adminpanel:list' %}">Скасувати</a>
+        <button type="submit">Створити</button>
+      </div>
+
+      </div>
+    </form>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>
+        &copy; 2025 Система голосування. Всі права захищені.
+      </p>
+      <p>
+        Система голосування
+      </p>
+      <p>
+        <a href="mailto:bohdan.horon@lnu.edu.ua">bohdan.horon@lnu.edu.ua</a> <br>
+        <a href="mailto:arsenii.muska@lnu.edu.ua">arsenii.muska@lnu.edu.ua</a>
+      </p>
+    </div>
+  </footer>
+</body>
 {% endblock %}

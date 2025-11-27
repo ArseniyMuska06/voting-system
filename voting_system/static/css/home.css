@@ -1,0 +1,234 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@media screen and (max-width: 750px) {
+    #meet figure {
+        flex-direction: column;
+        align-items: center;
+    }
+    #meet img {
+        margin-bottom: 2em;
+    }
+    .footer-content {
+        flex-direction: column;
+        gap: 2em;
+    }
+    .footer-content a {
+        line-height: 2;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.purple-p {
+    color: #8092eb;
+}
+.light-grey-p {
+    color: #9d9da0;
+}
+.grey-p {
+    color: hsl(240, 2%, 42%);
+}
+
+#login-modal,
+#register-modal {
+    display: none;
+    position: fixed;
+    background: black;
+    width: 100vw;
+    height: 100vh;
+}
+
+.modal-container {
+    border-radius: 15px;
+    padding: 2.5em;
+    position: fixed;
+    line-height: 2.5;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    width: 450px;
+    height: 300px;
+    background: #1a1f35;
+}
+.modal-container p {
+    margin-bottom: 1.3em;
+}
+.modal-container button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: #5b7fff;
+    color: white;
+    border-radius: 50px;
+}
+.modal-container button:hover {
+    background: #6b8aff;
+}
+
+.modal-header {
+    display: flex;
+    gap: 1em;
+}
+
+.modal-user-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75em 8.5em;
+    cursor: pointer;
+    border: 2px solid #5b7fff;
+    border-radius: 15px;
+    color: #5b7fff;
+    text-decoration: none;
+}
+
+.modal-user-btn:hover {
+    background: #5b7fff;
+    color: #7999ff;
+}
+
+.modal-admin-btn {
+    margin-top: 1.2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75em 8.5em;
+    cursor: pointer;
+    border-radius: 15px;
+    border: 2px solid #7c5cff;
+    color: #7c5cff;
+    text-decoration: none;
+}
+
+.modal-admin-btn:hover {
+    background: #7c5cff;
+    color: #937fff;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: white;
+}
+
+header {
+    background: hsl(224, 46%, 21%);
+}
+.header-content {
+    margin: 0 auto;
+    padding: 1em 2em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1300px;
+}
+.header-content div{
+    display: flex;
+    gap: 1em;
+}
+header .login {
+    padding: 0.75em 2em;
+    border-radius: 30px;
+    font: inherit;
+    color: white;
+    background: #5b7fff;
+    border: none;
+}
+header .login:hover {
+    background: #6b8aff;
+}
+header .register {
+    padding: 0.75em 2em;
+    border-radius: 30px;
+    font: inherit;
+    color: white;
+    background: #7c5cff;
+    border: none;
+}
+header .register:hover {
+    background: #8b6fff;
+}
+
+main {
+    background: hsl(229, 34%, 15%);
+}
+#reasons {
+    margin: 0 auto;
+    max-width: 1300px;
+}
+.reasons-content {
+    border-radius: 20px;
+    background: hsl(224, 46%, 25%);
+    padding: 2em;
+    line-height: 2.25;
+    margin: 3.5em 2em;
+}
+#reasons ul {
+    margin-top: 1.5em;
+    list-style-image: url("/static/img/check.svg");
+    line-height: 2.5;
+}
+#reasons li {
+    padding-left: 0.5em;
+    margin-left: 2em;
+    color: #9d9da0;
+}
+#meet {
+    margin: 0 auto;
+    max-width: 1300px;
+}
+.meet-content {
+    border-radius: 20px;
+    margin: 3.5em 2em;
+    background: hsl(224, 46%, 25%);
+    padding: 2em;
+}
+#meet hr {
+    margin: 1em 0;
+    border: 0.25px solid hsl(224, 46%, 35%);
+}
+#meet figure {
+    margin-top: 2em;
+    display: flex;
+}
+#meet figcaption p {
+    margin-bottom: 1em;
+    margin-left: 1.5em;
+    line-height: 1.5;
+}
+
+#meet img {
+    border-radius: 100px;
+}
+
+footer {
+    background: hsl(224, 46%, 17%);
+}
+
+.footer-content {
+    color: hsl(240, 2%, 42%);
+    display: flex;
+    padding: 1.5em 2em;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+.footer-content a {
+    color: hsl(240, 2%, 42%);
+    text-decoration: none;
+}
+
+.footer-content a:hover {
+    color: #8092eb;
+}

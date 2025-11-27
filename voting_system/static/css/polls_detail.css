@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@media screen and (max-width: 750px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 2em;
+    }
+    .footer-content a {
+        line-height: 2;
+    }
+}
+
+.gray {
+    color: hsl(240, 2%, 52%);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background: hsl(224, 46%, 21%);
+}
+.header-content {
+    margin: 0 auto;
+    padding: 1.5em 2em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1300px;
+}
+.header-content div{
+    display: flex;
+}
+header .back {
+    text-decoration: none;
+    padding: 0.75em 2em;
+    border-radius: 15px;
+    font: inherit;
+    color: white;
+    background: #7c5cff;
+    border: none;
+}
+header .back:hover {
+    background: #8b6fff;
+}
+
+main {
+    background: hsl(229, 34%, 15%);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+#vote {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 2em;
+}
+
+.back-to-polls {
+    width: 100%;
+    max-width: 800px;
+    margin: 2em 0;
+}
+
+.back-to-polls a {
+    color: hsl(227, 100%, 68%);
+    text-decoration: none;
+    cursor: default;
+}
+.back-to-polls a:hover {
+    color: hsl(227, 100%, 78%);
+}
+
+.active-vote {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    width: 100%;
+    max-width: 800px;
+    flex-direction: column;
+    border-radius: 20px;
+    background: hsl(224, 46%, 25%);
+    padding: 2em;
+    line-height: 2;
+    margin-bottom: 5em;
+}
+
+hr {
+    width: 100%;
+    border: 1px solid hsl(224, 46%, 35%);
+    margin: 1em 0;
+}
+
+.active-vote form {
+    width: 100%;
+}
+
+.active-vote form button {
+    margin-top: 1.5em;
+    width: 100%;
+    font: inherit;
+    padding: 1em 1.5em;
+    border-radius: 10px;
+    font: inherit;
+    color: white;
+    background: #5b7fff;
+    border: none;
+}
+
+.active-vote form button:hover {
+    background: #6b8aff;
+}
+
+#id_option div label {
+    display: block;
+    margin: 1em 0;
+    padding: 1em 1.5em;
+    border: 2px solid hsl(224, 46%, 30%);
+    border-radius: 15px;
+    background: hsl(224, 46%, 20%);
+    cursor: pointer;
+}
+
+#id_option div label:hover {
+    border: 2px solid hsl(224, 46%, 33%);
+    background: hsl(224, 46%, 23%);
+}
+
+#id_option div label:has(input:checked) {
+    border: 2px solid hsl(227, 100%, 68%);
+    background: hsl(224, 46%, 30%);
+}
+
+#id_option div input {
+    margin-right: 1em;
+    accent-color: hsl(224, 46%, 35%);
+    width: 16px;
+    height: 16px;
+}
+
+.before-vote {
+    color: hsl(240, 2%, 62%);
+    margin: 1.5em 0;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5em;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.after-vote {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin: 3em 0;
+    line-height: 2;
+    padding: 2em;
+    width: 100%;
+    max-width: 800px;
+    background: hsl(224, 46%, 25%);
+    border-radius: 20px;
+}
+
+.content-table {
+    margin: 0 auto;
+}
+
+.content-table table {
+    background: hsl(224, 46%, 40%);
+    padding: 1em;
+    display: block;
+    border-radius: 15px;
+}
+
+footer {
+    background: hsl(224, 46%, 17%);
+}
+
+.footer-content {
+    color: hsl(240, 2%, 42%);
+    display: flex;
+    padding: 1.5em 2em;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+.footer-content p a {
+    color: hsl(240, 2%, 42%);
+    text-decoration: none;
+}
+
+.footer-content p a:hover {
+    color: #8092eb;
+}
