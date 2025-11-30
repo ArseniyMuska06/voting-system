@@ -13,6 +13,7 @@ class AdminPollForm(forms.ModelForm):
             "start_at",
             "end_at",
             "can_change_vote",
+            "is_anonymous",        # 🔽 додати сюди
             "quorum",
             "expected_turnout",
             "status",

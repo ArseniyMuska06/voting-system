@@ -1,6 +1,7 @@
 # polls/mongo.py
 from django.conf import settings
 from pymongo import MongoClient, ASCENDING
+import hashlib
 
 _client = None
 _votes_col = None
@@ -32,3 +33,28 @@ def get_user_id_for_request(request):
     if not request.session.session_key:
         request.session.save()
     return f"anon:{request.session.session_key}"
+
+def get_user_id_for_poll(poll, request):
+    """
+    Повертає значення поля user_id для документа голосу в MongoDB.
+
+    - Якщо poll.is_anonymous == False → як і раніше:
+        * авторизований: "user:<pk>"
+        * неавторизований: "anon:<session_key>"
+
+    - Якщо poll.is_anonymous == True → детермінований хеш:
+        "anon:<sha256(poll_id + base_id + ANON_VOTE_SALT)>"
+        де base_id = user:<pk> або anon:<session_key>.
+
+    Таким чином:
+      • у Mongo НЕ видно реальний user_id;
+      • але той самий користувач у тому ж опитуванні завжди дає той самий хеш → можна ловити повторне голосування.
+    """
+    base_id = get_user_id_for_request(request)  # "user:5" або "anon:<session_key>"
+    if not getattr(poll, "is_anonymous", False):
+        return base_id
+
+    salt = getattr(settings, "ANON_VOTE_SALT", settings.SECRET_KEY)
+    payload = f"{poll.pk}:{base_id}:{salt}"
+    digest = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    return f"anon:{digest}"

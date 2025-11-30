@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .mongo import get_votes_collection, get_user_id_for_request
+from .mongo import get_votes_collection, get_user_id_for_request, get_user_id_for_poll
 from .services import tally_poll, check_validity  # NEW
 
 def home(request):
@@ -101,7 +101,7 @@ class PollDetailView(DetailView):
 
         if not before_start and not is_finished and self.request.user.is_authenticated:
             col = get_votes_collection()
-            uid = get_user_id_for_request(self.request)
+            uid = get_user_id_for_poll(poll, self.request)
             existing = col.find_one({"poll_id": int(poll.pk), "user_id": uid})
             user_has_voted = existing is not None
             can_change_for_user = _can_change_for_user(poll, self.request.user)
@@ -129,7 +129,7 @@ class PollDetailView(DetailView):
 
         option = form.cleaned_data["option"]
         col = get_votes_collection()
-        uid = get_user_id_for_request(request)
+        uid = get_user_id_for_poll(self.object, request)  # 🔽 ТЕПЕР ТУТ
         doc_filter = {"poll_id": int(self.object.pk), "user_id": uid}
 
         existing = col.find_one(doc_filter)

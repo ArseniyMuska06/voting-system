@@ -14,6 +14,14 @@ class Poll(models.Model):
     start_at = models.DateTimeField(null=True, blank=True)      # Дата початку
     end_at = models.DateTimeField(null=True, blank=True)        # Дата закінчення
     can_change_vote = models.BooleanField(default=False)        # дозволяти/ні зміну голосу
+    
+    # 🔽 НОВЕ ПОЛЕ
+    is_anonymous = models.BooleanField(
+        default=False,
+        verbose_name="Анонімне голосування",
+        help_text="Якщо увімкнено, у MongoDB не зберігається справжній ID користувача, а результати по варіантах приховані до завершення.",
+    )
+
     quorum = models.PositiveSmallIntegerField(                  # кворум у %, 0–100
         help_text="Кворум у відсотках (0–100).",
     )

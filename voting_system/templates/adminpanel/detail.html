@@ -47,6 +47,8 @@
           <div><p class="lightgray">Кворум:</p> {{ poll.quorum }}%</div>
           <hr>
           <div><p class="lightgray">Очікуваний корпус:</p> {{ poll.expected_turnout|default:"—" }}</div>
+          <hr>
+          <div><p class="lightgray">Анонімне голосування:</p> {{ poll.is_anonymous|yesno:"Так,Ні" }}</div>
         </div>
 
         <div class="poll_stats">
@@ -69,25 +71,39 @@
 
         <div class="poll_results">
           <p>Варіанти</p>
-          <table border="1" cellpadding="6" cellspacing="0">
-            <thead>
-              <tr class="tr_head">
-                <td><strong class="lightgray">#</strong></td>
-                <td><strong class="lightgray">Текст</strong></td>
-                <td class="votes_c"><strong class="lightgray">Голосів</strong></td>
-              </tr>
-            </thead>
-            <tbody>
-              {% for opt in poll.options.all %}
-                <tr>
-                  <td>{{ opt.order }}</td>
-                  <td>{{ opt.text }}</td>
-                  <td class="votes_c">{{ option_votes|get_item:opt.pk|default:0 }}</td>
+
+          {% if poll.is_anonymous and not is_finished %}
+            <p>
+              Це анонімне голосування. Результати по варіантах будуть доступні після завершення.
+            </p>
+          {% else %}
+            <table border="1" cellpadding="6" cellspacing="0">
+              <thead>
+                <tr class="tr_head">
+                  <td><strong class="lightgray">#</strong></td>
+                  <td><strong class="lightgray">Текст</strong></td>
+                  <td class="votes_c"><strong class="lightgray">Голосів</strong></td>
                 </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {% for opt in poll.options.all %}
+                  <tr>
+                    <td>{{ opt.order }}</td>
+                    <td>{{ opt.text }}</td>
+                    <td class="votes_c">
+                      {% if option_votes %}
+                        {{ option_votes|get_item:opt.pk|default:0 }}
+                      {% else %}
+                        0
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
         </div>
+
 
         {% if poll.status != "completed" %}
           <form method="post" action="{% url 'adminpanel:finish_now' poll.pk %}" onsubmit="return confirm('Завершити зараз?');">

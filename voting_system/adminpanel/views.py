@@ -40,6 +40,17 @@ def _option_counts(poll: Poll) -> dict[int, int]:
         result[int(opt.pk)] = c
     return result
 
+def _is_poll_finished(poll: Poll) -> bool:
+    """
+    Вважаємо опитування завершеним, якщо:
+    - статус COMPLETED, або
+    - end_at заданий і вже минув.
+    """
+    now = timezone.now()
+    return (
+        poll.status == Poll.Status.COMPLETED
+        or (poll.end_at is not None and poll.end_at <= now)
+    )
 
 class MyPollListView(AdminGroupRequiredMixin, ListView):
     """
@@ -119,8 +130,15 @@ class PollAdminDetailView(AdminGroupRequiredMixin, DetailView):
         poll: Poll = self.object
 
         total_votes = _votes_count_for_poll(poll.pk)
-        option_votes = _option_counts(poll)
         need_votes = _quorum_required(poll)
+        is_finished = _is_poll_finished(poll)
+
+        # 🔐 Результати по варіантах:
+        # - для НЕанонімних показуємо завжди
+        # - для анонімних — лише після завершення
+        option_votes = None
+        if (not poll.is_anonymous) or is_finished:
+            option_votes = _option_counts(poll)
 
         # дійсність (valid)
         if poll.quorum == 0:
@@ -137,6 +155,7 @@ class PollAdminDetailView(AdminGroupRequiredMixin, DetailView):
                 "need_votes": need_votes,
                 "valid": valid,
                 "now": timezone.now(),
+                "is_finished": is_finished,    # 🔽 нове
             }
         )
         return ctx

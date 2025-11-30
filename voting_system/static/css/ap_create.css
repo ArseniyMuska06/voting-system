@@ -132,6 +132,16 @@ main {
     margin-left: 0.25em;
     transform: scale(1.5);
 }
+.poll_params p:has(label[for="id_is_anonymous"]) {
+    flex-direction: row;
+}
+.poll_params p:has(label[for="id_is_anonymous"]) input {
+    margin-left: 0.25em;
+    transform: scale(1.5);
+}
+.poll_params p:has(label[for="id_is_anonymous"]) .helptext {
+    margin-left: 2em;
+}
 .poll_params p input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     filter: brightness(0) invert(1);
 }
