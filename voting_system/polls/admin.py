@@ -4,7 +4,7 @@ from .models import Poll, PollOption
 
 class PollOptionInline(admin.TabularInline):
     model = PollOption
-    extra = 2  # скільки пустих рядків показувати для швидкого додавання
+    extra = 2
     fields = ("order", "text")
 
 

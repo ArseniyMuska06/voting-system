@@ -27,11 +27,8 @@ SECRET_KEY = 'django-insecure-dfd+l85ir!-(nku$0!iyis7*_0_jper9tckw))k3!%ux_z10e@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-""" LOGIN_URL = "accounts:login"
-LOGIN_REDIRECT_URL = "adminpanel:list"  # опціонально """
-
-LOGIN_URL = "login_user"           # головна сторінка логіну (за замовчуванням)
-LOGIN_REDIRECT_URL = "/polls/"     # куди потрапить звичайний користувач після входу
+LOGIN_URL = "login_user"
+LOGIN_REDIRECT_URL = "/polls/"
 
 ALLOWED_HOSTS = []
 
@@ -95,7 +92,7 @@ DATABASES = {
 }
 
 # Mongo
-MONGODB_URI = "mongodb://localhost:27017"   # або твій Atlas URI
+MONGODB_URI = "mongodb://localhost:27017"
 MONGODB_DB_NAME = "polls_db"
 MONGODB_VOTES_COLLECTION = "votes"
 
@@ -131,12 +128,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = 'static/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

@@ -17,10 +17,6 @@ from .mixins import AdminGroupRequiredMixin
 
 
 def _quorum_required(poll: Poll) -> int | None:
-    """
-    Скільки голосів потрібно, щоб кворум вважався досягнутим.
-    Якщо expected_turnout не заданий → повертаємо None (не можна визначити).
-    """
     if poll.expected_turnout is None:
         return None
     return ceil(poll.expected_turnout * (poll.quorum / 100.0))
@@ -32,7 +28,6 @@ def _votes_count_for_poll(poll_id: int) -> int:
 
 
 def _option_counts(poll: Poll) -> dict[int, int]:
-    """Повертає {option_id: votes} по всіх варіантах опитування."""
     col = get_votes_collection()
     result = {}
     for opt in poll.options.all():
@@ -41,11 +36,6 @@ def _option_counts(poll: Poll) -> dict[int, int]:
     return result
 
 def _is_poll_finished(poll: Poll) -> bool:
-    """
-    Вважаємо опитування завершеним, якщо:
-    - статус COMPLETED, або
-    - end_at заданий і вже минув.
-    """
     now = timezone.now()
     return (
         poll.status == Poll.Status.COMPLETED
@@ -53,10 +43,6 @@ def _is_poll_finished(poll: Poll) -> bool:
     )
 
 class MyPollListView(AdminGroupRequiredMixin, ListView):
-    """
-    /adminpanel/ — список моїх голосувань (admin = поточний юзер).
-    Картки з назвою/датами/статусом.
-    """
     model = Poll
     template_name = "adminpanel/list.html"
     context_object_name = "polls"
@@ -72,9 +58,6 @@ class MyPollListView(AdminGroupRequiredMixin, ListView):
 
 
 class PollCreateView(AdminGroupRequiredMixin, View):
-    """
-    /adminpanel/create/ — створення Poll + PollOption (мін. 2).
-    """
     template_name = "adminpanel/create.html"
     success_url = reverse_lazy("adminpanel:list")
 
@@ -111,18 +94,11 @@ class PollCreateView(AdminGroupRequiredMixin, View):
 
 
 class PollAdminDetailView(AdminGroupRequiredMixin, DetailView):
-    """
-    /adminpanel/<poll_id>/ — перегляд як у користувача + службова інфа:
-    - загальна кількість голосів (Mongo)
-    - дійсність за кворумом
-    - кнопка «Завершити зараз» (POST)
-    """
     model = Poll
     template_name = "adminpanel/detail.html"
     context_object_name = "poll"
 
     def get_queryset(self):
-        # тільки свої опитування
         return Poll.objects.filter(admin=self.request.user).prefetch_related("options")
 
     def get_context_data(self, **kwargs):
@@ -133,38 +109,31 @@ class PollAdminDetailView(AdminGroupRequiredMixin, DetailView):
         need_votes = _quorum_required(poll)
         is_finished = _is_poll_finished(poll)
 
-        # 🔐 Результати по варіантах:
-        # - для НЕанонімних показуємо завжди
-        # - для анонімних — лише після завершення
         option_votes = None
         if (not poll.is_anonymous) or is_finished:
             option_votes = _option_counts(poll)
 
-        # дійсність (valid)
         if poll.quorum == 0:
             valid = True
         elif need_votes is None:
-            valid = None  # не можемо визначити без expected_turnout
+            valid = None
         else:
             valid = total_votes >= need_votes
 
         ctx.update(
             {
                 "total_votes": total_votes,
-                "option_votes": option_votes,  # dict {option_id: count}
+                "option_votes": option_votes,
                 "need_votes": need_votes,
                 "valid": valid,
                 "now": timezone.now(),
-                "is_finished": is_finished,    # 🔽 нове
+                "is_finished": is_finished,
             }
         )
         return ctx
 
 
 def finish_now(request, pk: int):
-    """
-    POST /adminpanel/<pk>/finish/ — встановити end_at=now, status=COMPLETED.
-    """
     if request.method != "POST":
         return redirect(reverse("adminpanel:detail", args=[pk]))
 

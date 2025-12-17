@@ -9,20 +9,19 @@ class Poll(models.Model):
         ACTIVE = "active", "Active"
         COMPLETED = "completed", "Completed"
 
-    title = models.CharField(max_length=200)                    # Назва
-    short_description = models.CharField(max_length=500, blank=True)  # Короткий опис
-    start_at = models.DateTimeField(null=True, blank=True)      # Дата початку
-    end_at = models.DateTimeField(null=True, blank=True)        # Дата закінчення
-    can_change_vote = models.BooleanField(default=False)        # дозволяти/ні зміну голосу
+    title = models.CharField(max_length=200)
+    short_description = models.CharField(max_length=500, blank=True)
+    start_at = models.DateTimeField(null=True, blank=True)
+    end_at = models.DateTimeField(null=True, blank=True)
+    can_change_vote = models.BooleanField(default=False)
     
-    # 🔽 НОВЕ ПОЛЕ
     is_anonymous = models.BooleanField(
         default=False,
         verbose_name="Анонімне голосування",
         help_text="Якщо увімкнено, у MongoDB не зберігається справжній ID користувача, а результати по варіантах приховані до завершення.",
     )
 
-    quorum = models.PositiveSmallIntegerField(                  # кворум у %, 0–100
+    quorum = models.PositiveSmallIntegerField(
         help_text="Кворум у відсотках (0–100).",
     )
     expected_turnout = models.PositiveIntegerField(null=True, blank=True, help_text="Очікуваний корпус виборців (шт.).")
@@ -31,7 +30,7 @@ class Poll(models.Model):
         choices=Status.choices,
         default=Status.DRAFT,
     )
-    admin = models.ForeignKey(                                  # власник (admin_id)
+    admin = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="owned_polls",
@@ -68,7 +67,6 @@ class PollOption(models.Model):
     order = models.PositiveIntegerField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        # якщо order не заданий вручну — призначити наступний номер
         if self.order is None:
             last_option = PollOption.objects.filter(poll=self.poll).order_by('-order').first()
             self.order = 1 if last_option is None else last_option.order + 1

@@ -6,7 +6,6 @@ class AccountsConfig(AppConfig):
     name = 'accounts'
 
     def ready(self):
-        # створюємо групу admin після міграцій
         from django.db.models.signals import post_migrate
         from django.contrib.auth.models import Group
 

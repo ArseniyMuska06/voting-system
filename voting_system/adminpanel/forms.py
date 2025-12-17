@@ -13,7 +13,7 @@ class AdminPollForm(forms.ModelForm):
             "start_at",
             "end_at",
             "can_change_vote",
-            "is_anonymous",        # 🔽 додати сюди
+            "is_anonymous",
             "quorum",
             "expected_turnout",
             "status",
@@ -41,8 +41,8 @@ OptionFormSet = inlineformset_factory(
     PollOption,
     form=PollOptionForm,
     fields=["text", "order"],
-    extra=3,          # покаже 3 порожніх рядки зверху
-    min_num=2,        # мінімум 2 варіанти
+    extra=3,
+    min_num=2,
     validate_min=True,
     can_delete=False,
 )

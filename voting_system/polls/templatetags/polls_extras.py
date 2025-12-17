@@ -6,9 +6,6 @@ register = template.Library()
 
 @register.simple_tag(takes_context=True)
 def has_voted(context, poll):
-    """
-    True якщо поточний користувач уже голосував у цьому poll (MongoDB).
-    """
     request = context.get("request")
     if request is None or poll is None:
         return False
@@ -25,7 +22,6 @@ def get_item(d, key):
     try:
         if d is None:
             return None
-        # пробуємо int-ключ і str-ключ
         return d.get(int(key), d.get(str(key)))
     except Exception:
         return None

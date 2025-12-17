@@ -12,7 +12,6 @@ def get_votes_collection():
         _client = MongoClient(settings.MONGODB_URI)
         db = _client[settings.MONGODB_DB_NAME]
         _votes_col = db[settings.MONGODB_VOTES_COLLECTION]
-        # індекс унікальності (idempotent — створиться один раз)
         _votes_col.create_index(
             [("poll_id", ASCENDING), ("user_id", ASCENDING)],
             unique=True,
@@ -22,35 +21,14 @@ def get_votes_collection():
 
 
 def get_user_id_for_request(request):
-    """
-    Визначаємо user_id:
-    - якщо користувач залогінений — беремо його pk;
-    - інакше — використовуємо session key як псевдо-ідентифікатор.
-    """
     if request.user.is_authenticated:
         return f"user:{request.user.pk}"
-    # гарантуємо наявність session_key
     if not request.session.session_key:
         request.session.save()
     return f"anon:{request.session.session_key}"
 
 def get_user_id_for_poll(poll, request):
-    """
-    Повертає значення поля user_id для документа голосу в MongoDB.
-
-    - Якщо poll.is_anonymous == False → як і раніше:
-        * авторизований: "user:<pk>"
-        * неавторизований: "anon:<session_key>"
-
-    - Якщо poll.is_anonymous == True → детермінований хеш:
-        "anon:<sha256(poll_id + base_id + ANON_VOTE_SALT)>"
-        де base_id = user:<pk> або anon:<session_key>.
-
-    Таким чином:
-      • у Mongo НЕ видно реальний user_id;
-      • але той самий користувач у тому ж опитуванні завжди дає той самий хеш → можна ловити повторне голосування.
-    """
-    base_id = get_user_id_for_request(request)  # "user:5" або "anon:<session_key>"
+    base_id = get_user_id_for_request(request)
     if not getattr(poll, "is_anonymous", False):
         return base_id
 

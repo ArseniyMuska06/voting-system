@@ -1,10 +1,3 @@
-from django.shortcuts import render
-from .mongo import get_votes_collection, get_user_id_for_request, get_user_id_for_poll
-from .services import tally_poll, check_validity  # NEW
-
-def home(request):
-    return render(request, "home.html")
-
 # polls/views.py
 from django.db import models
 from django.utils import timezone
@@ -12,8 +5,13 @@ from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 
+from .mongo import get_votes_collection, get_user_id_for_poll
+from .services import tally_poll, check_validity
 from .models import Poll
 from .forms import VoteForm
+
+def home(request):
+    return render(request, "home.html")
 
 def _can_change_for_user(poll, user) -> bool:
     """
@@ -33,18 +31,13 @@ def _active_filter_qs():
     return (Poll.objects
             .filter(status=Poll.Status.ACTIVE)
             .filter(
-                # якщо start_at заданий — start_at <= now, інакше пропускаємо
                 models.Q(start_at__isnull=True) | models.Q(start_at__lte=now),
             )
             .filter(
-                # якщо end_at заданий — end_at >= now, інакше пропускаємо
                 models.Q(end_at__isnull=True) | models.Q(end_at__gte=now),
             )
             .select_related("admin")
             .prefetch_related("options"))
-
-
-from django.db import models  # потрібен для Q вище
 
 
 class ActivePollListView(ListView):
@@ -62,25 +55,10 @@ class PollDetailView(DetailView):
     context_object_name = "poll"
 
     def get_queryset(self):
-        # РАНІШЕ: return _active_filter_qs()   # -> лише активні (і ти ловиш 404) :contentReference[oaicite:2]{index=2}
-        # ТЕПЕР: пускаємо активні АБО завершені АБО ті, в яких end_at уже минув
         now = timezone.now()
         return (Poll.objects
                 .select_related("admin")
                 .prefetch_related("options"))
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = VoteForm(request.POST, poll=self.object)
-        if form.is_valid():
-            # тут можна зберегти голос у БД — на зараз просто підтвердження
-            request.session.setdefault("voted_polls", set())
-            # Django session не вміє сет — тому як список:
-            voted = set(request.session.get("voted_polls", []))
-            voted.add(self.object.pk)
-            request.session["voted_polls"] = list(voted)
-            return redirect("polls:confirm", pk=self.object.pk)
-        return render(request, self.template_name, {"poll": self.object, "form": form})
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -117,25 +95,24 @@ class PollDetailView(DetailView):
             ctx["is_valid"] = is_valid
             ctx["validity_note"] = validity_note
         elif not before_start:
-            ctx["form"] = VoteForm(poll=poll)  # форму показуємо лише в активний період
+            ctx["form"] = VoteForm(poll=poll)
 
         return ctx
     
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()  # poll
+        self.object = self.get_object()
         form = VoteForm(request.POST, poll=self.object)
         if not form.is_valid():
             return render(request, self.template_name, {"poll": self.object, "form": form})
 
         option = form.cleaned_data["option"]
         col = get_votes_collection()
-        uid = get_user_id_for_poll(self.object, request)  # 🔽 ТЕПЕР ТУТ
+        uid = get_user_id_for_poll(self.object, request)
         doc_filter = {"poll_id": int(self.object.pk), "user_id": uid}
 
         existing = col.find_one(doc_filter)
 
         if existing is None:
-            # перше голосування → вставляємо
             col.insert_one({
                 "poll_id": int(self.object.pk),
                 "user_id": uid,
@@ -145,21 +122,17 @@ class PollDetailView(DetailView):
             })
             return redirect("polls:confirm", pk=self.object.pk)
 
-       # Користувач уже голосував → або оновлюємо, або блокуємо
         if _can_change_for_user(self.object, request.user):
-            # оновлюємо голос через уже наявний col/doc_filter
             col.update_one(
                 doc_filter,
                 {"$set": {"option_id": int(option.pk), "updated_at": timezone.now()}}
             )
             return redirect("polls:confirm", pk=self.object.pk)
 
-        # Зміна заборонена → показуємо помилку і повертаємо той самий detail
         messages.error(request, "Ви вже голосували. Змінювати голос заборонено.")
 
-        # Щоб банер з’явився, перераховуємо контекст:
-        ctx = self.get_context_data()            # self.object уже встановлено вище
-        ctx["form"] = VoteForm(poll=self.object) # форма знову на екрані
+        ctx = self.get_context_data()
+        ctx["form"] = VoteForm(poll=self.object)
         return render(request, self.template_name, ctx)
 
 
@@ -167,5 +140,4 @@ class PollDetailView(DetailView):
 def vote_confirm(request, pk):
     poll = get_object_or_404(_active_filter_qs(), pk=pk)
     messages.success(request, "Ваш голос зараховано ✅")
-    # просте повідомлення + повернення на список
     return render(request, "polls/confirm.html", {"poll": poll})
